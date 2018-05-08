@@ -6,5 +6,5 @@ add_compile_options(-std=c++11)
 find_package(Boost 1.58 REQUIRED COMPONENTS graph)
 include_directories(include ${Boost_INCLUDE_DIRS} )
 
-add_executable(main src/main.cpp src/Domain.cpp src/Solver.cpp)
+add_executable(main src/main.cpp src/plan_utils.cpp src/InteractionCostCalculator.cpp src/PlanningAgent.cpp src/MultiAgentPlanner.cpp src/Scenario.cpp)
 target_link_libraries( main ${Boost_LIBRARIES} )

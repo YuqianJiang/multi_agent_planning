@@ -1,32 +1,26 @@
 #ifndef multi_agent_planning_Scenario_h__guard
 #define multi_agent_planning_Scenario_h__guard
 
-#include <Domain.h>
+#include <plan_utils.h>
 
 namespace multi_agent_planning {
 
-typedef std::pair<int, Edge> AgentAction; 
-typedef std::map<AgentAction, AgentAction> EventMap;
-
-//key is action causing collision/synergy
-
-/*enum EventType { Collision, Synergy };
-
-struct Event {
-	EventType type;
-	int agentA;
-	int agentB;
-	Edge actionA;
-	Edge actionB;
-};*/
-
 class Scenario {
 public:
-	Scenario(Domain domain, int numCollisions, int numSynergies);
+	// change to a vector of domains
+	Scenario(const std::vector<AgentAction> actions, int numCollisions, int numSynergies);
+
+	const std::vector<AgentAction> getPotentialCollisions(AgentAction action);
+
+	const std::vector<AgentAction> getPotentialSynergies(AgentAction action);
 
 private:
-	EventMap collisionEvents;
-	EventMap synergyEvents;
+
+	typedef std::map<Edge, std::vector<AgentAction> > InteractionMap;
+
+	std::vector<InteractionMap> collisionMaps;
+	std::vector<InteractionMap> synergyMaps;
+
 };
 
 }

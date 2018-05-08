@@ -1,39 +1,31 @@
-#include <Domain.h>
-#include <Solver.h>
-
-#include <boost/graph/small_world_generator.hpp>
+#include <PlanningAgent.h>
+#include <MultiAgentPlanner.h>
 
 using namespace std;
 using namespace multi_agent_planning;
 
-typedef boost::small_world_iterator<RNGType, Graph> SWGen;
 
 int main(int argc, char** argv) {
+	int numAgents = 1;
 
-	int numAgents = 10;
-	/*if (argc == 2) {
-		numAgents = atoi(argv[0]);
-	}*/
-
-  RNGType gen(time(0));
-
-  vector<Domain> domains;
+  vector<PlanningAgent> agents;
   vector<Instance> instances;
 
   for (int i = 0; i < numAgents; ++i) {
-  	Domain domain(SWGen(gen, 20, 5, 0.5, false), SWGen(), 20);
-  	domains.push_back(domain);
+  	PlanningAgent agent(i, generateGraph(30, 5, 0.5));
+  	agents.push_back(agent);
 
   	stringstream path;
 		path << "../graphs/graph_" << i << ".dot";
-  	domain.drawGraph(path.str());
+  	agent.drawGraph(path.str());
 
-  	Instance instance = domain.getRandomInstance();
+  	Instance instance = agent.getRandomInstance();
   	instances.push_back(instance);
   }
 
-  Solver solver(domains);
-  vector<Plan> plans = solver.solve_baseline(instances);
+  MultiAgentPlanner solver(agents);
+
+  /*vector<Plan> plans = solver.solve_baseline(instances);
 
   for (int i = 0; i < plans.size(); ++i) {
 		cout << plans[i].toString() << endl;
@@ -43,7 +35,10 @@ int main(int argc, char** argv) {
 			cout << wm[*it] << " ";
 		}
 		cout << endl;
-	}
+	}*/
+	
+	Plan plan = agents[0].computeInterDependentPlan(instances[0], Scenario(agents[0].getAllActions(), 0, 0), vector<Plan>());
+  cout << agents[0].planToString(plan);
   
 
   return 0;
