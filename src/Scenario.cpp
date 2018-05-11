@@ -8,7 +8,7 @@ namespace multi_agent_planning {
 Scenario::Scenario(vector<AgentAction> actions, int numCollisions, int numSynergies) :
 		collisionMaps(), synergyMaps() {}
 
-const vector<AgentAction> Scenario::getPotentialCollisions(AgentAction action) {
+vector<AgentAction> Scenario::getPotentialCollisions(AgentAction action) const {
 	
 	/*vector<Edge> collisions;
 	
@@ -22,10 +22,15 @@ const vector<AgentAction> Scenario::getPotentialCollisions(AgentAction action) {
 
 	return collisions;*/
 
-	return collisionMaps[action.agent_id][action.edge];
+	try {
+		return collisionMaps[action.agent_id].at(action.edge);
+	}
+	catch (std::out_of_range) {
+		return vector<AgentAction>();
+	}
 }
 
-const vector<AgentAction> Scenario::getPotentialSynergies(AgentAction action) {
+vector<AgentAction> Scenario::getPotentialSynergies(AgentAction action) const {
 	
 	/*vector<Edge> synergies;
 	
@@ -38,7 +43,12 @@ const vector<AgentAction> Scenario::getPotentialSynergies(AgentAction action) {
 	}
 
 	return synergies;*/
-	return collisionMaps[action.agent_id][action.edge];
+	try {
+		return synergyMaps[action.agent_id].at(action.edge);
+	}
+	catch (std::out_of_range) {
+		return vector<AgentAction>();
+	}
 }
 
 }

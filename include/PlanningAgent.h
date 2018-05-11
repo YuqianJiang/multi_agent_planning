@@ -24,6 +24,8 @@ public:
 
 	std::vector<AgentAction> getAllActions();
 
+	std::vector<Vertex> getAllStates();
+
 	std::string planToString(const Plan& plan);
 
 

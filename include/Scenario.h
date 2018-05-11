@@ -7,12 +7,12 @@ namespace multi_agent_planning {
 
 class Scenario {
 public:
-	// change to a vector of domains
+
 	Scenario(const std::vector<AgentAction> actions, int numCollisions, int numSynergies);
 
-	const std::vector<AgentAction> getPotentialCollisions(AgentAction action);
+	std::vector<AgentAction> getPotentialCollisions(AgentAction action) const;
 
-	const std::vector<AgentAction> getPotentialSynergies(AgentAction action);
+	std::vector<AgentAction> getPotentialSynergies(AgentAction action) const;
 
 private:
 

@@ -202,6 +202,15 @@ vector<AgentAction> PlanningAgent::getAllActions() {
 	return allActions;
 }
 
+vector<Vertex> PlanningAgent::getAllStates() {
+	vector<Vertex> states;
+
+	copy(vertices(graph).first, vertices(graph).second, 
+						back_inserter(states));
+
+	return states;
+}
+
 string PlanningAgent::planToString(const Plan& plan) {
 	stringstream ss;
 
