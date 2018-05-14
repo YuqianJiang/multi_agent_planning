@@ -87,7 +87,7 @@ public:
     for (Vertex v = u; v != p[v]; v = p[v]) {
     	Vertex s = p[v];
     	Edge e = edge(s, v, g).first;
-    	time += g[e].cost;
+    	time++;
     }
   }
 
@@ -219,7 +219,11 @@ vector<Vertex> PlanningAgent::getAllStates() {
 string PlanningAgent::planToString(const Plan& plan) {
 	stringstream ss;
 
-	ss << "cost = " << plan.cost << ": ";
+	ss << "----------Plan----------" << endl;
+
+	ss << "cost = " << plan.cost << endl;
+
+	ss << "states: ";
 	
 	auto it = plan.actions.begin();
 	ss << it->source << " ";
@@ -228,6 +232,13 @@ string PlanningAgent::planToString(const Plan& plan) {
 	}
 
 	ss << endl; 
+
+	it = plan.actions.begin();
+	for (; it != plan.actions.end(); ++it) {
+		ss << it->edge << ": " << it->start_time << ", " << it->end_time << endl;
+	}
+
+	ss << "************************" << endl;
 
 	return ss.str();
 }

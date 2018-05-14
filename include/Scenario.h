@@ -6,6 +6,11 @@
 namespace multi_agent_planning {
 
 struct Interaction {
+
+	Interaction(std::pair<int, Edge> a, std::pair<int, Edge> b, int cost) :
+			agentA(a.first), actionA(a.second), agentB(b.first), actionB(b.second), 
+			cost(cost) {}
+
 	int agentA;
 	Edge actionA;
 	int agentB;
@@ -22,8 +27,11 @@ public:
 
 private:
 
+	void insertInteraction(Interaction i);
+
 	typedef std::map<Edge, std::vector<Interaction> > InteractionMap;
 	std::vector<InteractionMap> interactionMaps;
+	std::vector<std::pair<int, Edge> > allActions;
 
 };
 
