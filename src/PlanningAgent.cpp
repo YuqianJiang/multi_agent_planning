@@ -45,7 +45,7 @@ private:
   Vertex m_goal;
 };
 
-Plan PlanningAgent::computeSingleAgentPlan(Instance instance) {
+Plan PlanningAgent::computeSingleAgentPlan(const Instance instance) {
 
 	Plan plan;
 
@@ -106,7 +106,8 @@ private:
 };
 
 
-Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Scenario& scenario, const vector<Plan>& plans) {
+Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Scenario& scenario, 
+																							const vector<Plan>& plans) {
 
 	/*auto wmap = 
 		make_transform_value_property_map(
@@ -118,6 +119,8 @@ Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Sc
 	}
 
 	cout << endl;*/
+
+	cout << "Planning agent " << agent_id << "..." << endl;
 
 	Plan plan;
 
@@ -141,8 +144,6 @@ Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Sc
   	planHelper(instance.goal, p, d, plan);
 
   }
-
-  //cout << time << endl;
 
 	return plan;
 }
@@ -190,15 +191,7 @@ Instance PlanningAgent::getRandomInstance() {
 	return instance;
 }
 
-vector<Edge> PlanningAgent::getAllActions() {
-	/*vector<AgentAction> allActions;
-
-	Graph::edge_iterator eIt = edges(graph).first;
-	for (; eIt != edges(graph).second; ++eIt) {
-			AgentAction action(agent_id, *eIt, graph[*eIt].cost);
-			allActions.push_back(action);
-	}
-	*/
+vector<Edge> PlanningAgent::getAllActions() const {
 
 	vector<Edge> allActions;
 
@@ -207,7 +200,7 @@ vector<Edge> PlanningAgent::getAllActions() {
 	return allActions;
 }
 
-vector<Vertex> PlanningAgent::getAllStates() {
+vector<Vertex> PlanningAgent::getAllStates() const {
 	vector<Vertex> states;
 
 	copy(vertices(graph).first, vertices(graph).second, 
@@ -219,9 +212,7 @@ vector<Vertex> PlanningAgent::getAllStates() {
 string PlanningAgent::planToString(const Plan& plan) {
 	stringstream ss;
 
-	ss << "----------Plan----------" << endl;
-
-	ss << "cost = " << plan.cost << endl;
+	//ss << "----------Plan----------" << endl;
 
 	ss << "states: ";
 	
@@ -231,14 +222,19 @@ string PlanningAgent::planToString(const Plan& plan) {
 		ss << it->target << " ";
 	}
 
-	ss << endl; 
+	ss << endl;
 
+	/*
 	it = plan.actions.begin();
 	for (; it != plan.actions.end(); ++it) {
-		ss << it->edge << ": " << it->start_time << ", " << it->end_time << endl;
+		ss << "time " << it->start_time << ": " << it->edge << endl;
 	}
+	*/
+	
 
-	ss << "************************" << endl;
+	ss << "cost = " << plan.cost << endl;
+
+	ss << "------------------------" << endl;
 
 	return ss.str();
 }
@@ -256,11 +252,11 @@ void PlanningAgent::planHelper(Vertex v,
 
 		PlannedAction action;
 
-		action.end_time = d[v];
+		//action.end_time = d[v];
 		action.target = v;
 		if (p[v] != v) {
 			action.source = p[v];
-			action.start_time = d[p[v]];
+			//action.start_time = d[p[v]];
 			action.edge = edge(p[v], v, graph).first;
 
 			plan_list.push_front(action);
@@ -270,7 +266,14 @@ void PlanningAgent::planHelper(Vertex v,
 
 	plan.actions.reserve(plan_list.size());
 
-	copy(plan_list.begin(), plan_list.end(), back_inserter(plan.actions));
+	int time = 0;
+	for (auto& a : plan_list) {
+		a.start_time = time++;
+		a.action_cost = graph[a.edge].cost;
+		plan.actions.push_back(a);
+	}
+
+	//copy(plan_list.begin(), plan_list.end(), back_inserter(plan.actions));
 
 }
 

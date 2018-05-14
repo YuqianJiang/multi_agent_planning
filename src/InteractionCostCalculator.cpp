@@ -36,31 +36,8 @@ int InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int co
 	}
 	catch (std::out_of_range) {}
 
-	/*
-	try {
-		const vector<PlannedAction>& synergies = synergyMap.at(edge);
+	//cout << edge << ": " << inter_dependent_cost << endl;
 
-		for (auto const& action : synergies) {
-			if ((action.end_time < (time + cost)) && (action.end_time > time)) {
-				inter_dependent_cost = action.end_time - time;
-			}
-		}
-	}
-	catch (std::out_of_range) {}
-	*/
-
-	/*try {
-		const vector<PlannedAction>& collisions = collisionMap.at(edge);
-
-		for (auto const& action : collisions) {
-			if ((action.end_time < (time + cost)) && (action.end_time > time)) {
-				inter_dependent_cost += collision_cost;
-			}
-		}
-	}
-	catch (std::out_of_range) {}
-	*/
-	cout << edge << ": " << inter_dependent_cost << endl;
 	return inter_dependent_cost;
 }
 

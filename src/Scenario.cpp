@@ -5,7 +5,8 @@ using namespace boost;
 
 namespace multi_agent_planning {
 
-Scenario::Scenario(vector<vector<Edge> > actions, int numCollisions, int numSynergies) : 
+Scenario::Scenario(std::vector<std::vector<Edge> > actions, 
+									 std::vector<Graph> graphs, int numInteractions) : 
 		interactionMaps(actions.size()), allActions() {
 
 	for (int i = 0; i < actions.size(); ++i) {
@@ -14,10 +15,33 @@ Scenario::Scenario(vector<vector<Edge> > actions, int numCollisions, int numSyne
 							[i](Edge& e){return make_pair(i, e);});
 	}
 
-	//vector<Interaction> interactions;
-	//interactions.push_back(Interaction(allActions[9], allActions[0], 1));
-	Interaction inter(allActions[0], allActions[8], 1);
-	insertInteraction(inter);
+	set<pair<int, int> > generated;
+
+	for (int i = 0; i < numInteractions; ++i) {
+
+		int actA, actB;
+		
+		do {
+			actA = getRndInt(allActions.size()-1);
+			actB = getRndInt(allActions.size()-1);
+		} while ((allActions[actA].first == allActions[actB].first) || 
+					  (generated.find(make_pair(actA, actB)) != generated.end()));
+
+		generated.insert(make_pair(actA, actB));
+ 
+ 		std::pair<int, Edge> action = allActions[actB];
+
+ 		Graph g = graphs[action.first];
+ 		int cost = g[action.second].cost;
+
+ 		int interactionCost;
+ 		do {
+ 			interactionCost = getRndInt(-cost, cost);
+ 		} while (interactionCost == 0);
+
+		Interaction interaction(allActions[actA], allActions[actB], interactionCost);
+		insertInteraction(interaction);
+	}
 
 }
 
@@ -33,6 +57,23 @@ vector<Interaction> Scenario::getAllInteractionsOfAction(int agent_id, Edge acti
 	catch (std::out_of_range) {
 		return vector<Interaction>();
 	}
+}
+
+string Scenario::toString() const {
+	stringstream ss;
+	for (auto& act : allActions) {
+		vector<Interaction> interactions = this->getAllInteractionsOfAction(act.first, act.second);
+		for (auto& inter : interactions) {
+			ss << inter.toString() << endl;
+		}
+	}
+	return ss.str();
+}
+
+string Interaction::toString() {
+	stringstream ss;
+	ss << agentA << actionA << " -> " << agentB << actionB << ": " << cost;
+	return ss.str();
 }
 
 }

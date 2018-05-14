@@ -8,10 +8,15 @@ int main(int argc, char** argv) {
 
 	int numAgents = 2;
 
+	vector<Graph> graphs;
+
 	vector<PlanningAgent> agents;
 
 	for (int i = 0; i < numAgents; ++i) {
-		PlanningAgent agent(i, generateGraph(4, 4, 0));
+		Graph g = generateGraph(4, 4, 0, 1);
+		graphs.push_back(g);
+
+		PlanningAgent agent(i, g);
 		agents.push_back(agent);
 
 		stringstream path;
@@ -24,6 +29,8 @@ int main(int argc, char** argv) {
 	actions.push_back(agents[0].getAllActions());
 	actions.push_back(agents[1].getAllActions());
 
+	Scenario scenario(actions, graphs, 16);
+
 	Plan plan_0;
 
 	{
@@ -34,7 +41,7 @@ int main(int argc, char** argv) {
 		instance.goal = states[3];
 
 
-		plan_0 = agents[0].computeInterDependentPlan(instance, Scenario(actions, 0, 0), vector<Plan>());
+		plan_0 = agents[0].computeInterDependentPlan(instance, scenario, vector<Plan>());
 		cout << agents[0].planToString(plan_0);
 	}
 
@@ -48,7 +55,7 @@ int main(int argc, char** argv) {
 		instance.start = states[0];
 		instance.goal = states[3];
 
-		plan_1 = agents[1].computeInterDependentPlan(instance, Scenario(actions, 0, 0), vector<Plan>({plan_0}));
+		plan_1 = agents[1].computeInterDependentPlan(instance, scenario, vector<Plan>({plan_0}));
 		cout << agents[1].planToString(plan_1);
 	}
 

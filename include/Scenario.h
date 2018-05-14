@@ -11,6 +11,8 @@ struct Interaction {
 			agentA(a.first), actionA(a.second), agentB(b.first), actionB(b.second), 
 			cost(cost) {}
 
+	std::string toString();
+
 	int agentA;
 	Edge actionA;
 	int agentB;
@@ -21,9 +23,11 @@ struct Interaction {
 class Scenario {
 public:
 
-	Scenario(const std::vector<std::vector<Edge> > actions, int numCollisions, int numSynergies);
+	Scenario(std::vector<std::vector<Edge> > actions, std::vector<Graph> graphs, int numInteractions);
 
 	std::vector<Interaction> getAllInteractionsOfAction(int agent_id, Edge action) const;
+
+	std::string toString() const;
 
 private:
 

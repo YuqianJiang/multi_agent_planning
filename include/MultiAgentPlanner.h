@@ -10,14 +10,16 @@ class MultiAgentPlanner {
 	
 public:
 
-	MultiAgentPlanner(const std::vector<PlanningAgent>& agents) : agents(agents) {}
+	MultiAgentPlanner() {}
 
-	std::vector<Plan> solve_baseline(std::vector<Instance> instances);
+	std::vector<Plan> solve_baseline(std::vector<PlanningAgent>& agents, 
+																	const std::vector<Instance>& instances);
 
-	std::vector<Plan> solve_brute_force_ordering(std::vector<Instance> instances, Scenario scenario);
-	
-private:
-	std::vector<PlanningAgent> agents;
+	std::vector<Plan> solve_brute_force_ordering(std::vector<PlanningAgent>& agents, 
+																							const std::vector<Instance>& instances, 
+																							const Scenario& scenario);
+
+	int evaluate_plans(const std::vector<Plan>& plans, const Scenario& scenario, bool print);
 
 
 };

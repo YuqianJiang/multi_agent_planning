@@ -38,7 +38,7 @@ struct PlannedAction {
 	Vertex source;
 	Vertex target;
 	int start_time;
-	int end_time;
+	int action_cost;
 };
 
 struct Plan {
@@ -48,7 +48,11 @@ struct Plan {
 
 int getRndInt(int max);
 
+int getRndInt(int min, int max);
+
 Graph generateGraph(int numV, int numConnected, float prob);
+
+Graph generateGraph(int numV, int numConnected, float prob, int cost);
 
 }
 
