@@ -41,13 +41,6 @@ struct PlannedAction {
 	int end_time;
 };
 
-struct AgentAction {
-	AgentAction(int agent_id, Edge edge) : agent_id(agent_id), edge(edge) {}
-	
-	int agent_id;
-	Edge edge;
-};
-
 struct Plan {
 	std::vector<PlannedAction> actions;
 	int cost;

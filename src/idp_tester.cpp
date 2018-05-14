@@ -9,7 +9,6 @@ int main(int argc, char** argv) {
 	int numAgents = 2;
 
 	vector<PlanningAgent> agents;
-	vector<AgentAction> allActions;
 
 	for (int i = 0; i < numAgents; ++i) {
 		PlanningAgent agent(i, generateGraph(4, 4, 0));
@@ -27,8 +26,11 @@ int main(int argc, char** argv) {
 	instance.start = states[0];
 	instance.goal = states[3];
 
+	vector<vector<Edge> > actions;
+	actions.push_back(agents[0].getAllActions());
+
 	Plan plan = agents[0].computeInterDependentPlan(instance,
-																							Scenario(agents[0].getAllActions(), 0, 0),
+																							Scenario(actions, 0, 0),
 																							vector<Plan>());
 	cout << agents[0].planToString(plan);
 

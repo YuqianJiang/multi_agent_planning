@@ -22,7 +22,7 @@ public:
 
 	Instance getRandomInstance();
 
-	std::vector<AgentAction> getAllActions();
+	std::vector<Edge> getAllActions();
 
 	std::vector<Vertex> getAllStates();
 

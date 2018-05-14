@@ -35,10 +35,11 @@ int main(int argc, char** argv) {
 			cout << wm[*it] << " ";
 		}
 		cout << endl;
-	}*/
+	}
 	
 	Plan plan = agents[0].computeInterDependentPlan(instances[0], Scenario(agents[0].getAllActions(), 0, 0), vector<Plan>());
   cout << agents[0].planToString(plan);
+  */
   
   return 0;
 }

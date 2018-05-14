@@ -23,10 +23,8 @@ public:
 
 private:
 
-	static int collision_cost;
-
-	std::map<Edge, std::vector<PlannedAction> > collisionMap;
-	std::map<Edge, std::vector<PlannedAction> > synergyMap;
+	typedef std::vector<std::pair<PlannedAction, int> > PlannedActionList;
+	std::map<Edge, PlannedActionList > interactionMap;
 
 };
 

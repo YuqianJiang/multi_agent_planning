@@ -190,14 +190,19 @@ Instance PlanningAgent::getRandomInstance() {
 	return instance;
 }
 
-vector<AgentAction> PlanningAgent::getAllActions() {
-	vector<AgentAction> allActions;
+vector<Edge> PlanningAgent::getAllActions() {
+	/*vector<AgentAction> allActions;
 
 	Graph::edge_iterator eIt = edges(graph).first;
 	for (; eIt != edges(graph).second; ++eIt) {
-			AgentAction action(agent_id, *eIt);
+			AgentAction action(agent_id, *eIt, graph[*eIt].cost);
 			allActions.push_back(action);
 	}
+	*/
+
+	vector<Edge> allActions;
+
+	copy(edges(graph).first, edges(graph).second, back_inserter(allActions));
 
 	return allActions;
 }

@@ -5,21 +5,25 @@
 
 namespace multi_agent_planning {
 
+struct Interaction {
+	int agentA;
+	Edge actionA;
+	int agentB;
+	Edge actionB;
+	int cost;
+};
+
 class Scenario {
 public:
 
-	Scenario(const std::vector<AgentAction> actions, int numCollisions, int numSynergies);
+	Scenario(const std::vector<std::vector<Edge> > actions, int numCollisions, int numSynergies);
 
-	std::vector<AgentAction> getPotentialCollisions(AgentAction action) const;
-
-	std::vector<AgentAction> getPotentialSynergies(AgentAction action) const;
+	std::vector<Interaction> getAllInteractionsOfAction(int agent_id, Edge action) const;
 
 private:
 
-	typedef std::map<Edge, std::vector<AgentAction> > InteractionMap;
-
-	std::vector<InteractionMap> collisionMaps;
-	std::vector<InteractionMap> synergyMaps;
+	typedef std::map<Edge, std::vector<Interaction> > InteractionMap;
+	std::vector<InteractionMap> interactionMaps;
 
 };
 

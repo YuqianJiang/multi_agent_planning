@@ -5,32 +5,10 @@ using namespace boost;
 
 namespace multi_agent_planning {
 
-Scenario::Scenario(vector<AgentAction> actions, int numCollisions, int numSynergies) :
-		collisionMaps(), synergyMaps() {}
+Scenario::Scenario(vector<vector<Edge> > actions, int numCollisions, int numSynergies) :
+		interactionMaps() {}
 
-vector<AgentAction> Scenario::getPotentialCollisions(AgentAction action) const {
-	
-	/*vector<Edge> collisions;
-	
-	vector<AgentAction>& actions = collisionMaps[action.agent_id][action.edge];
-
-	for (auto const& a : actions) {
-		if (a.agent_id == agent_id) {
-			collisions.push_back(a.edge);
-		}
-	}
-
-	return collisions;*/
-
-	try {
-		return collisionMaps[action.agent_id].at(action.edge);
-	}
-	catch (std::out_of_range) {
-		return vector<AgentAction>();
-	}
-}
-
-vector<AgentAction> Scenario::getPotentialSynergies(AgentAction action) const {
+vector<Interaction> Scenario::getAllInteractionsOfAction(int agent_id, Edge action) const {
 	
 	/*vector<Edge> synergies;
 	
@@ -43,11 +21,13 @@ vector<AgentAction> Scenario::getPotentialSynergies(AgentAction action) const {
 	}
 
 	return synergies;*/
+
+
 	try {
-		return synergyMaps[action.agent_id].at(action.edge);
+		return interactionMaps[agent_id].at(action);
 	}
 	catch (std::out_of_range) {
-		return vector<AgentAction>();
+		return vector<Interaction>();
 	}
 }
 
