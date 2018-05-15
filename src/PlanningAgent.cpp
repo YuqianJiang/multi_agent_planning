@@ -50,7 +50,7 @@ Plan PlanningAgent::computeSingleAgentPlan(const Instance instance) {
 	Plan plan;
 
 	vector<Vertex> p(num_vertices(graph));
-	vector<int> d(num_vertices(graph));
+	vector<float> d(num_vertices(graph));
 
 	try {
 		astar_search(
@@ -107,7 +107,7 @@ private:
 
 
 Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Scenario& scenario, 
-																							const vector<Plan>& plans) {
+																							const vector<Plan>& plans, const float alpha) {
 
 	/*auto wmap = 
 		make_transform_value_property_map(
@@ -120,19 +120,20 @@ Plan PlanningAgent::computeInterDependentPlan(const Instance& instance, const Sc
 
 	cout << endl;*/
 
-	cout << "Planning agent " << agent_id << "..." << endl;
+	//cout << "Planning agent " << agent_id << "..." << endl;
 
 	Plan plan;
 
 	vector<Vertex> p(num_vertices(graph));
-	vector<int> d(num_vertices(graph));
+	vector<float> d(num_vertices(graph));
+
 	int time = 0;
-	InteractionCostCalculator calc(scenario, plans, agent_id);
+	InteractionCostCalculator calc(scenario, plans, agent_id, alpha);
 
 	try {
 		astar_search(
 			graph, instance.start, 
-			astar_heuristic<Graph, int>(), 
+			astar_heuristic<Graph, float>(), 
 			weight_map(get(&Action::inter_dependent_cost, graph)).
 			predecessor_map(make_iterator_property_map(p.begin(), get(vertex_index, graph))).
   	  distance_map(make_iterator_property_map(d.begin(), get(vertex_index, graph))).
@@ -212,9 +213,9 @@ vector<Vertex> PlanningAgent::getAllStates() const {
 string PlanningAgent::planToString(const Plan& plan) {
 	stringstream ss;
 
-	//ss << "----------Plan----------" << endl;
+	ss << "Plan for agent " << agent_id << ": ";
 
-	ss << "states: ";
+	//ss << "  states: ";
 	
 	auto it = plan.actions.begin();
 	ss << it->source << " ";
@@ -222,7 +223,7 @@ string PlanningAgent::planToString(const Plan& plan) {
 		ss << it->target << " ";
 	}
 
-	ss << endl;
+	//ss << endl;
 
 	/*
 	it = plan.actions.begin();
@@ -232,16 +233,16 @@ string PlanningAgent::planToString(const Plan& plan) {
 	*/
 	
 
-	ss << "cost = " << plan.cost << endl;
+	ss << "  (cost: " << plan.cost << ")" << endl;
 
-	ss << "------------------------" << endl;
+	//ss << "------------------------" << endl;
 
 	return ss.str();
 }
 
 void PlanningAgent::planHelper(Vertex v, 
 															 const std::vector<Vertex>& p, 
-															 const std::vector<int>& d, 
+															 const std::vector<float>& d, 
 														   Plan& plan) {
 
 	plan.cost = d[v];

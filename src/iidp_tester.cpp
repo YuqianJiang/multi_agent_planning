@@ -54,10 +54,29 @@ int main(int argc, char** argv) {
 
 	MultiAgentPlanner solver;
 
-	//cout << "..........." << endl;
-	//cout << scenario.toString();
+	cout << "---------------------Baseline---------------------" << endl;
 
-	solver.solve_brute_force_ordering(agents, instances, scenario);
+	vector<Plan> plans = solver.solve_baseline(agents, instances);
+	cout << endl;
+	solver.evaluate_plans(plans, scenario, true);
+
+	cout << "---------------------Best Ordering---------------------" << endl;
+
+	plans = solver.solve_brute_force_ordering(agents, instances, scenario);
+	cout << endl;
+	solver.evaluate_plans(plans, scenario, true);
+
+	cout << "---------------------Increasing Dependency---------------------" << endl;
+
+	plans = solver.solve_increasing_dependency(agents, instances, scenario, 4);
+	cout << endl;
+	solver.evaluate_plans(plans, scenario, true);
+
+	cout << "---------------------Best Alternative---------------------" << endl;
+
+	plans = solver.solve_best_alternative(agents, instances, scenario, 4);
+	cout << endl;
+	solver.evaluate_plans(plans, scenario, true);
 
 	/*
 	cout << "!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;

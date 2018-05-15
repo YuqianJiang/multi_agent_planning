@@ -14,13 +14,12 @@ struct Action {
 	Action() : cost(), inter_dependent_cost() {}
 	
 	int cost;
-	int inter_dependent_cost;
+	float inter_dependent_cost;
 };
 
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS, boost::no_property,
 	Action > Graph;
 
-typedef boost::property_map<Graph, int Action::*>::type WeightMap;
 typedef Graph::vertex_descriptor Vertex;
 typedef Graph::edge_descriptor Edge;
 
@@ -43,7 +42,7 @@ struct PlannedAction {
 
 struct Plan {
 	std::vector<PlannedAction> actions;
-	int cost;
+	float cost;
 };
 
 int getRndInt(int max);

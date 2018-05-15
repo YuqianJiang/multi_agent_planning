@@ -7,8 +7,18 @@ namespace multi_agent_planning {
 
 InteractionCostCalculator::InteractionCostCalculator(Scenario scenario, 
 																										 const vector<Plan>& plans,
-																										 int agent_id) {
+																										 int agent_id) : 
+	InteractionCostCalculator(scenario, plans, agent_id, 1) {
+}
+
+InteractionCostCalculator::InteractionCostCalculator(Scenario scenario, 
+																										const std::vector<Plan>& plans,
+																										int agent_id,
+																										float alpha) : alpha(alpha) {
 	for (int i = 0; i < plans.size(); ++i) {
+
+		if (i == agent_id) continue;
+
 		for (auto const& a: plans[i].actions) {
 			
 			vector<Interaction> interactions = scenario.getAllInteractionsOfAction(i, a.edge);
@@ -21,16 +31,16 @@ InteractionCostCalculator::InteractionCostCalculator(Scenario scenario,
 	}
 }
 
-int InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int cost) const {
+float InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int cost) const {
 
-	int inter_dependent_cost = cost;
+	float inter_dependent_cost = cost;
 
 	try {
 		const PlannedActionList& interactions = interactionMap.at(edge);
 
 		for (auto const& i : interactions) {
 			if (i.first.start_time == time) {
-				inter_dependent_cost += i.second;
+				inter_dependent_cost += i.second * alpha;
 			}
 		}
 	}

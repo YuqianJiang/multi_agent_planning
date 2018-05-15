@@ -19,7 +19,23 @@ public:
 																							const std::vector<Instance>& instances, 
 																							const Scenario& scenario);
 
-	int evaluate_plans(const std::vector<Plan>& plans, const Scenario& scenario, bool print);
+	std::vector<Plan> solve_increasing_dependency(std::vector<PlanningAgent>& agents, 
+																								const std::vector<Instance>& instances, 
+																								const Scenario& scenario,
+																								const int theta);
+
+	std::vector<Plan> solve_best_alternative(std::vector<PlanningAgent>& agents, 
+																					const std::vector<Instance>& instances, 
+																					const Scenario& scenario,
+																					const int theta);
+
+	std::pair<std::vector<int>, int> evaluate_plans(const std::vector<Plan>& plans, 
+																									const Scenario& scenario, bool print);
+
+	int evaluate_one_plan(const std::vector<Plan>& plans, 
+												const Scenario& scenario,
+												const Plan plan,
+												int agent_id);
 
 
 };

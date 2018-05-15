@@ -1,0 +1,99 @@
+0(0,1) -> 1(0,1): -1
+0(0,2) -> 1(2,0): 1
+0(0,2) -> 1(0,1): 1
+0(1,3) -> 1(1,3): -1
+0(2,3) -> 1(2,3): 1
+0(2,0) -> 1(2,3): 1
+0(2,0) -> 1(0,2): -1
+1(0,1) -> 0(1,3): -1
+1(0,1) -> 0(0,2): -1
+1(0,1) -> 0(0,1): 1
+1(0,2) -> 0(1,2): -1
+1(1,3) -> 0(0,1): -1
+1(2,3) -> 0(2,0): -1
+1(2,0) -> 0(2,0): 1
+1(2,0) -> 0(3,0): -1
+1(2,0) -> 0(2,3): -1
+
+---------------------Baseline---------------------
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 1 3   (cost: 2)
+
+**********Evaluating plans**********
+ -----Agent 0-----
+  (0,1): 2
+  (1,3): 1
+  Plan cost: 3
+ -----Agent 1-----
+  (0,1): 0
+  (1,3): 0
+  Plan cost: 0
+************Total cost: 3************
+
+---------------------Best Ordering---------------------
+!!!!!!!!!! Agent ordering: 0 1 !!!!!!!!!!
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 1 3   (cost: 0)
+!!!!!!!!!! Agent ordering: 1 0 !!!!!!!!!!
+Plan for agent 1: 0 1 3   (cost: 2)
+Plan for agent 0: 0 2 3   (cost: 1)
+
+**********Evaluating plans**********
+ -----Agent 0-----
+  (0,1): 2
+  (1,3): 1
+  Plan cost: 3
+ -----Agent 1-----
+  (0,1): 0
+  (1,3): 0
+  Plan cost: 0
+************Total cost: 3************
+
+---------------------Increasing Dependency---------------------
+!!!!!!!! Planning dependency: 0 !!!!!!!!
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 1 3   (cost: 2)
+!!!!!!!! Planning dependency: 0.25 !!!!!!!!
+Plan for agent 0: 0 2 3   (cost: 1.75)
+Plan for agent 1: 0 1 3   (cost: 1.5)
+!!!!!!!! Planning dependency: 0.5 !!!!!!!!
+Plan for agent 0: 0 2 3   (cost: 1.5)
+Plan for agent 1: 0 2 3   (cost: 2.5)
+!!!!!!!! Planning dependency: 0.75 !!!!!!!!
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 2 3   (cost: 2.75)
+!!!!!!!! Planning dependency: 1 !!!!!!!!
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 1 3   (cost: 0)
+
+**********Evaluating plans**********
+ -----Agent 0-----
+  (0,1): 2
+  (1,3): 1
+  Plan cost: 3
+ -----Agent 1-----
+  (0,1): 0
+  (1,3): 0
+  Plan cost: 0
+************Total cost: 3************
+
+---------------------Best Alternative---------------------
+Plan for agent 0: 0 1 3   (cost: 2)
+Plan for agent 1: 0 1 3   (cost: 2)
+!!!!!!!!!!!! Iteration 1 !!!!!!!!!!!!
+Plan for agent 0: 0 2 3   (cost: 1)
+Plan for agent 1: 0 1 3   (cost: 0)
+!!!!!!!!!!!! Iteration 2 !!!!!!!!!!!!
+Plan for agent 0: 0 2 3   (cost: 1)
+Plan for agent 1: 0 2 3   (cost: 3)
+
+**********Evaluating plans**********
+ -----Agent 0-----
+  (0,2): 0
+  (2,3): 1
+  Plan cost: 1
+ -----Agent 1-----
+  (0,1): 2
+  (1,3): 1
+  Plan cost: 3
+************Total cost: 4************

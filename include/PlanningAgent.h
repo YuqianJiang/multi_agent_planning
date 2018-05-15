@@ -19,7 +19,8 @@ public:
 	Plan computeSingleAgentPlan(const Instance instance);
 
 	Plan computeInterDependentPlan(const Instance& instance, const Scenario& scenario, 
-																 const std::vector<Plan>& plans);
+																 const std::vector<Plan>& plans,
+																 const float alpha = 1);
 
 	Instance getRandomInstance();
 
@@ -46,7 +47,7 @@ private:
 
 	Vertex getRandomConnectedVertex(Vertex source);	
 
-	void planHelper(Vertex v, const std::vector<Vertex>& p, const std::vector<int>& d, Plan& plan);
+	void planHelper(Vertex v, const std::vector<Vertex>& p, const std::vector<float>& d, Plan& plan);
 
 };
 
