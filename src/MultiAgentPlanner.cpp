@@ -68,19 +68,21 @@ vector<Plan> MultiAgentPlanner::solve_increasing_dependency(std::vector<Planning
 
 	for (int j = 0; j <= theta; ++j) {
 		float alpha = j / (theta * 1.0);
-		vector<Plan> currentPlans;
+		// use currentPlans for concurrent version
+		//vector<Plan> currentPlans;
 		
 		cout << "!!!!!!!! Planning dependency: " << alpha << " !!!!!!!!" << endl;
 
 		for (int i = 0; i < agents.size(); ++i) {
 			Plan plan = agents[i].computeInterDependentPlan(instances[i], scenario, plans, alpha);
 
-			currentPlans.push_back(plan);
+			plans[i] = plan;
+			// currentPlans.push_back(plan);
 
 			cout << agents[i].planToString(plan);
 		}
 
-		copy(currentPlans.begin(), currentPlans.end(), plans.begin());
+		//copy(currentPlans.begin(), currentPlans.end(), plans.begin());
 
 	}
 		

@@ -49,8 +49,6 @@ int getRndInt(int max);
 
 int getRndInt(int min, int max);
 
-Graph generateGraph(int numV, int numConnected, float prob);
-
 Graph generateGraph(int numV, int numConnected, float prob, int cost);
 
 }

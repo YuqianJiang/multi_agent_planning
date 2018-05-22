@@ -23,7 +23,13 @@ struct Interaction {
 class Scenario {
 public:
 
-	Scenario(std::vector<std::vector<Edge> > actions, std::vector<Graph> graphs, int numInteractions);
+	Scenario(const std::vector<std::vector<Edge> >& actions, 
+					const std::vector<Graph>& graphs, int numInteractions);
+
+	Scenario(const std::vector<std::vector<Edge> >& actions, 
+					const std::vector<Graph>& graphs, 
+					int numConflicts,
+					int numSynergies);
 
 	std::vector<Interaction> getAllInteractionsOfAction(int agent_id, Edge action) const;
 

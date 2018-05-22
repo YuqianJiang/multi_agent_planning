@@ -1,0 +1,7 @@
+	int numAgents = 5;
+	int numVertices = 4;
+	int numConnected = 4;
+	int numInteractions = 160;
+	int numConflicts = 80;
+	int numSynergies = 80;
+	float prob = 0;

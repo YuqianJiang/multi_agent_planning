@@ -48,6 +48,10 @@ float InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int 
 
 	//cout << edge << ": " << inter_dependent_cost << endl;
 
+	if (inter_dependent_cost < 0) {
+		return 0;
+	}
+
 	return inter_dependent_cost;
 }
 

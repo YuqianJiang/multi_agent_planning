@@ -21,10 +21,6 @@ int getRndInt(int min, int max) {
   std::size_t n = rand_gen();
 }
 
-Graph generateGraph(int numV, int numConnected, float prob) {
-	return generateGraph(numV, numConnected, prob, getRndInt(100));
-}
-
 Graph generateGraph(int numV, int numConnected, float prob, int cost) {
 	Graph graph = Graph(SWGen(gen, numV, numConnected, prob, false), SWGen(), numV);
 	for (Graph::edge_iterator eIt = edges(graph).first; eIt != edges(graph).second; ++eIt) {
