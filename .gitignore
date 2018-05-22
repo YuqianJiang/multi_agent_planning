@@ -1,0 +1,5 @@
+# exclude everything
+graphs/*
+
+# exception to the rule
+!graphs/.gitkeep 
