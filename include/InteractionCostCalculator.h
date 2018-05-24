@@ -21,9 +21,11 @@ public:
 
 	float getInterDependentCost(Edge edge, int time, int cost) const;
 
+	std::vector<int> getInteractingAgents(Edge, int time) const;
+
 private:
 
-	typedef std::vector<std::pair<PlannedAction, int> > PlannedActionList;
+	typedef std::vector<std::tuple<int, PlannedAction, int> > PlannedActionList;
 	std::map<Edge, PlannedActionList > interactionMap;
 
 	float alpha;

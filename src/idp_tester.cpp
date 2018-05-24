@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 	actions.push_back(agents[1].getAllActions());
 
 	Scenario scenario(actions, graphs, 16);
+	cout << scenario.toString();
 
 	Plan plan_0;
 

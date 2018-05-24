@@ -5,7 +5,7 @@ using namespace multi_agent_planning;
 
 int main(int argc, char** argv) {
 
-	int numAgents = 2;
+	int numAgents = 3;
 
 	vector<Graph> graphs;
 	vector<PlanningAgent> agents;
@@ -75,6 +75,12 @@ int main(int argc, char** argv) {
 	cout << "---------------------Best Alternative---------------------" << endl;
 
 	plans = solver.solve_best_alternative(agents, instances, scenario, 4);
+	cout << endl;
+	solver.evaluate_plans(plans, scenario, true);
+
+	cout << "---------------------Best Alternative With Grouping---------------------" << endl;
+
+	plans = solver.solve_best_alternative_grouping(agents, instances, scenario, 4);
 	cout << endl;
 	solver.evaluate_plans(plans, scenario, true);
 

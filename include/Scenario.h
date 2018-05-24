@@ -11,7 +11,7 @@ struct Interaction {
 			agentA(a.first), actionA(a.second), agentB(b.first), actionB(b.second), 
 			cost(cost) {}
 
-	std::string toString();
+	std::string toString() const;
 
 	int agentA;
 	Edge actionA;
@@ -32,6 +32,9 @@ public:
 					int numSynergies);
 
 	std::vector<Interaction> getAllInteractionsOfAction(int agent_id, Edge action) const;
+	std::vector<Interaction> getInteractionsOnAgent(int agent_id, Edge action, int affected_agent) const;
+
+	bool checkInteractingActions(int agentA, Edge actionA, int agentB, Edge actionB) const;
 
 	std::string toString() const;
 
@@ -41,6 +44,7 @@ private:
 
 	typedef std::map<Edge, std::vector<Interaction> > InteractionMap;
 	std::vector<InteractionMap> interactionMaps;
+
 	std::vector<std::pair<int, Edge> > allActions;
 
 };

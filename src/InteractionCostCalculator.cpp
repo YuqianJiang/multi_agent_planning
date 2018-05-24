@@ -20,11 +20,12 @@ InteractionCostCalculator::InteractionCostCalculator(Scenario scenario,
 		if (i == agent_id) continue;
 
 		for (auto const& a: plans[i].actions) {
-			
-			vector<Interaction> interactions = scenario.getAllInteractionsOfAction(i, a.edge);
+
+			vector<Interaction> interactions = scenario.getInteractionsOnAgent(i, a.edge, agent_id);
 
 			for (auto const& interaction : interactions) {
-				interactionMap[interaction.actionB].push_back(make_pair(a, interaction.cost));
+					// cout << interaction.toString() << endl;
+					interactionMap[interaction.actionB].push_back(make_tuple(i, a, interaction.cost));
 			}
 
 		}
@@ -39,8 +40,8 @@ float InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int 
 		const PlannedActionList& interactions = interactionMap.at(edge);
 
 		for (auto const& i : interactions) {
-			if (i.first.start_time == time) {
-				inter_dependent_cost += i.second * alpha;
+			if (get<1>(i).start_time == time) {
+				inter_dependent_cost += get<2>(i) * alpha;
 			}
 		}
 	}
@@ -53,6 +54,25 @@ float InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int 
 	}
 
 	return inter_dependent_cost;
+}
+
+vector<int> InteractionCostCalculator::getInteractingAgents(Edge edge, int time) const {
+	vector<int> agents;
+
+	try {
+		const PlannedActionList& interactions = interactionMap.at(edge);
+
+		for (auto const& i : interactions) {
+			if (get<1>(i).start_time == time) {
+				cout << get<0>(i) << " " << get<1>(i).edge << endl;
+				agents.push_back(get<0>(i));
+			}
+		}
+	}
+	catch (std::out_of_range) {
+		return agents;
+	}
+
 }
 
 }

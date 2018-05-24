@@ -1,5 +1,6 @@
 #include <MultiAgentPlanner.h>
 #include <InteractionCostCalculator.h>
+#include <boost/graph/connected_components.hpp>
 
 using namespace std;
 using namespace boost;
@@ -101,12 +102,10 @@ vector<Plan> MultiAgentPlanner::solve_best_alternative(std::vector<PlanningAgent
 	bool convergence = false;
 
 	while ((! convergence) && (iteration_counter < theta)) {
-		// TODO: find subsets
+		cout << "!!!!!!!!!!!! Iteration " << iteration_counter << " !!!!!!!!!!!!" << endl;
 
 		vector<Plan> alternativePlans;
 		vector<int> alternativeCosts;
-
-		cout << "!!!!!!!!!!!! Iteration " << iteration_counter << " !!!!!!!!!!!!" << endl;
 
 		for (int i = 0; i < agents.size(); ++i) {
 			Plan plan = agents[i].computeInterDependentPlan(instances[i], scenario, plans);
@@ -147,6 +146,79 @@ vector<Plan> MultiAgentPlanner::solve_best_alternative(std::vector<PlanningAgent
 
 		plans[best_alt] = alternativePlans[best_alt];
 		costs[best_alt] = alternativeCosts[best_alt];
+
+		iteration_counter++;
+
+	}
+
+	return plans;
+}
+
+vector<Plan> MultiAgentPlanner::solve_best_alternative_grouping(std::vector<PlanningAgent>& agents, 
+																											const std::vector<Instance>& instances, 
+																											const Scenario& scenario,
+																											const int theta) {
+	
+	vector<Plan> plans = solve_baseline(agents, instances);
+	vector<int> costs = evaluate_plans(plans, scenario, false).first;
+
+	int iteration_counter = 1;
+	bool convergence = false;
+
+	while ((! convergence) && (iteration_counter < theta)) {
+		cout << "!!!!!!!!!!!! Iteration " << iteration_counter << " !!!!!!!!!!!!" << endl;
+
+		vector<vector<int> > groups = get_interacting_groups(plans, scenario);
+		
+		convergence = true;
+
+		for (auto& group : groups) {
+			
+			vector<Plan> group_plans;
+			for (int id : group) {
+				group_plans.push_back(plans[id]);
+			}
+
+			vector<Plan> alternativePlans;
+			vector<int> alternativeCosts;
+
+			for (int id : group) {
+				Plan plan = agents[id].computeInterDependentPlan(instances[id], scenario, group_plans);
+
+				alternativePlans.push_back(plan);
+
+				cout << agents[id].planToString(plan);
+
+				alternativeCosts.push_back(plan.cost);
+			}
+
+			int best_alt = 0;
+			int best_diff = 0;
+			
+			for (int i = 0; i < group.size(); ++i) {
+				int cost_diff = costs[group[i]] - alternativeCosts[i];
+
+				if (cost_diff > 0) {
+					convergence = false;
+				}
+				
+				if (cost_diff > best_diff) {
+					best_diff = cost_diff;
+					best_alt = i;
+				}
+			}
+
+			if (! convergence) {
+				cout << "Agent " << group[best_alt] << " wins!" << endl;
+			}
+
+			plans[group[best_alt]] = alternativePlans[best_alt];
+			costs[group[best_alt]] = alternativeCosts[best_alt];
+
+		}
+
+
+
 
 		iteration_counter++;
 
@@ -204,6 +276,39 @@ int MultiAgentPlanner::evaluate_one_plan(const std::vector<Plan>& plans,
 	}
 
 	return plan_cost;
+}
+
+vector<vector<int> > MultiAgentPlanner::get_interacting_groups(const vector<Plan>& plans, 
+																															const Scenario& scenario) {
+	typedef adjacency_list <setS, vecS, undirectedS> InteractionGraph;
+  InteractionGraph agent_graph(plans.size());
+
+	for (int id = 0; id < plans.size(); ++id) {
+		cout << " -Agent " << id << "- " << endl;
+
+		InteractionCostCalculator calc(scenario, plans, id);
+
+		for (const auto& act : plans[id].actions) {
+			vector<int> interactingAgents = calc.getInteractingAgents(act.edge, act.start_time);
+			
+			for (int agent : interactingAgents) {
+				add_edge(id, agent, agent_graph);
+			}
+		}
+	}
+
+	vector<int> component(plans.size());
+  int num = connected_components(agent_graph, &component[0]);
+
+  vector<vector<int> > groups(num);
+  cout << "Total number of groups: " << num << endl;
+  for (int i = 0; i != component.size(); ++i) {
+    cout << "Agent " << i <<" is in group " << component[i] << endl;
+    groups[component[i]].push_back(i);
+  }
+  cout << endl;
+
+  return groups;
 }
 
 

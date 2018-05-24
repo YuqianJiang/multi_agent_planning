@@ -127,6 +127,29 @@ vector<Interaction> Scenario::getAllInteractionsOfAction(int agent_id, Edge acti
 	}
 }
 
+
+vector<Interaction> Scenario::getInteractionsOnAgent(int agent_id, Edge action, int affected_agent) const {
+	vector<Interaction> results;
+	vector<Interaction> allInteractions = getAllInteractionsOfAction(agent_id, action);
+	copy_if(allInteractions.begin(), allInteractions.end(), back_inserter(results), 
+				[affected_agent](Interaction& i){ return (i.agentB == affected_agent); });
+
+	return results;
+}
+
+
+bool Scenario::checkInteractingActions(int agentA, Edge actionA, int agentB, Edge actionB) const {
+	vector<Interaction> allInteractions = getAllInteractionsOfAction(agentA, actionA);
+
+	for (const Interaction& i : allInteractions) {
+		if ((i.agentB == agentB) && (i.actionB == actionB)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 string Scenario::toString() const {
 	stringstream ss;
 	for (auto& act : allActions) {
@@ -138,7 +161,7 @@ string Scenario::toString() const {
 	return ss.str();
 }
 
-string Interaction::toString() {
+string Interaction::toString() const {
 	stringstream ss;
 	ss << agentA << actionA << " -> " << agentB << actionB << ": " << cost;
 	return ss.str();

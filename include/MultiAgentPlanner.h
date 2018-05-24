@@ -29,6 +29,11 @@ public:
 																					const Scenario& scenario,
 																					const int theta);
 
+	std::vector<Plan> solve_best_alternative_grouping(std::vector<PlanningAgent>& agents, 
+																					const std::vector<Instance>& instances, 
+																					const Scenario& scenario,
+																					const int theta);
+
 	std::pair<std::vector<int>, int> evaluate_plans(const std::vector<Plan>& plans, 
 																									const Scenario& scenario, bool print);
 
@@ -36,6 +41,10 @@ public:
 												const Scenario& scenario,
 												const Plan plan,
 												int agent_id);
+
+private:
+	std::vector<std::vector<int> > get_interacting_groups(const std::vector<Plan>& plans, 
+																												const Scenario& scenario);
 
 
 };
