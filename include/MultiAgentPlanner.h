@@ -34,7 +34,7 @@ public:
 																					const Scenario& scenario,
 																					const int theta);
 
-	std::pair<std::vector<int>, int> evaluate_plans(const std::vector<Plan>& plans, 
+	std::tuple<int, int, int> evaluate_plans(const std::vector<Plan>& plans, 
 																									const Scenario& scenario, bool print);
 
 	int evaluate_one_plan(const std::vector<Plan>& plans, 

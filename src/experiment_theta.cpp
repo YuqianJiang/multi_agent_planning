@@ -7,7 +7,7 @@ using namespace multi_agent_planning;
 
 int main(int argc, char** argv) {
 
-	int numAgents;
+	int numAgents = 30;
 	int numVertices = 10;
 	int numConnected = 4;
 	float prob = 0.2;
@@ -17,33 +17,31 @@ int main(int argc, char** argv) {
 	int problem_id = 0;
 
 	if (argc == 2) {
-		numAgents = atoi(argv[1]);
 		numInteractions = numAgents * 100;
-		theta = numAgents * 2;
+		theta = atoi(argv[1]) * numAgents;
 	}
 	else if (argc == 3) {
-		numAgents = atoi(argv[1]);
 		problem_id = atoi(argv[2]);
 		numInteractions = numAgents * 100;
-		theta = numAgents * 2;
+		theta = atoi(argv[1]) * numAgents;
 	}
 	else {
-		cerr << "usage: experiment_agents <num_agents> [<problem_id>]" << endl;
+		cerr << "usage: experiment_agents <theta> [<problem_id>]" << endl;
 		return 1;
 	}
 
 	stringstream output_path_ss;
-	output_path_ss << "../results/agents/result_" << problem_id << ".csv";
+	output_path_ss << "../results/theta/result_" << problem_id << ".csv";
 	ofstream out(output_path_ss.str().c_str());
 
 	stringstream detail_output_path_ss;
-	detail_output_path_ss << "../results/agents/detail_" << problem_id;
+	detail_output_path_ss << "../results/theta/detail_" << problem_id;
 
 	ofstream detail_out(detail_output_path_ss.str());
 	std::streambuf* backup = cout.rdbuf(detail_out.rdbuf());
 
 	stringstream graphs_path_ss; 
-	graphs_path_ss << "../results/agents/graphs_" << problem_id;
+	graphs_path_ss << "../results/theta/graphs_" << problem_id;
 	boost::filesystem::create_directories(graphs_path_ss.str());
 
 	//out << "problem_id" << "," << "num_agents" << "," << "num_vertices" << "," << "num_connected" << "," << "prob" << ",";
@@ -53,14 +51,14 @@ int main(int argc, char** argv) {
 	//out << problem_id << "," << numAgents << "," << numVertices << "," << numConnected << "," << prob << ",";
 	//out << numInteractions << "," << theta << ",";
 
-	out << "problem_id" << "," << "num_agents" << ","
+	out << "problem_id" << "," << "theta" << ","
 			<< "independent_cost" << "," << "independent_conflicts" << "," << "independent_synergies" << ","
 			<< "increasing_dependency_cost" << "," << "increasing_dependency_conflicts" << "," << "increasing_dependency_synergies" << ","
 			<< "best_alternative_cost" << "," << "best_alternative_conflicts" << "," << "best_alternative_synergies" << ","
 			<< "best_alternative_grouping_cost" << "," << "best_alternative_grouping_conflicts" << "," << "best_alternative_grouping_synergies"
 			<< endl;
 
-	out << problem_id << "," << numAgents << ",";
+	out << problem_id << "," << theta << ",";
 
 	vector<Graph> graphs;
 	vector<PlanningAgent> agents;

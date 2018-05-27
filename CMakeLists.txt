@@ -20,3 +20,6 @@ include_directories(include ${Boost_INCLUDE_DIRS} )
 
 add_executable(experiment_agents src/experiment_agents.cpp src/plan_utils.cpp src/InteractionCostCalculator.cpp src/PlanningAgent.cpp src/MultiAgentPlanner.cpp src/Scenario.cpp)
 target_link_libraries( experiment_agents ${Boost_LIBRARIES} )
+
+add_executable(experiment_theta src/experiment_theta.cpp src/plan_utils.cpp src/InteractionCostCalculator.cpp src/PlanningAgent.cpp src/MultiAgentPlanner.cpp src/Scenario.cpp)
+target_link_libraries( experiment_theta ${Boost_LIBRARIES} )

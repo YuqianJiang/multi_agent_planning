@@ -49,7 +49,7 @@ vector<Plan> MultiAgentPlanner::solve_brute_force_ordering(vector<PlanningAgent>
 
 		}
 
-		int total_cost = evaluate_plans(plans, scenario, false).second;
+		int total_cost = get<0>(evaluate_plans(plans, scenario, false));
 
 		if (total_cost < best_cost) {
 			bestPlans = plans;
@@ -96,7 +96,11 @@ vector<Plan> MultiAgentPlanner::solve_best_alternative(std::vector<PlanningAgent
 																											const int theta) {
 	
 	vector<Plan> plans = solve_baseline(agents, instances);
-	vector<int> costs = evaluate_plans(plans, scenario, false).first;
+
+	vector<int> costs(agents.size());
+	for (int id = 0; id < agents.size(); ++id) {
+		costs[id] = evaluate_one_plan(plans, scenario, plans[id], id);
+	}
 
 	int iteration_counter = 1;
 	bool convergence = false;
@@ -160,7 +164,11 @@ vector<Plan> MultiAgentPlanner::solve_best_alternative_grouping(std::vector<Plan
 																											const int theta) {
 	
 	vector<Plan> plans = solve_baseline(agents, instances);
-	vector<int> costs = evaluate_plans(plans, scenario, false).first;
+
+	vector<int> costs(agents.size());
+	for (int id = 0; id < agents.size(); ++id) {
+		costs[id] = evaluate_one_plan(plans, scenario, plans[id], id);
+	}
 
 	int iteration_counter = 1;
 	bool convergence = false;
@@ -227,10 +235,12 @@ vector<Plan> MultiAgentPlanner::solve_best_alternative_grouping(std::vector<Plan
 	return plans;
 }
 
-pair<vector<int>, int> MultiAgentPlanner::evaluate_plans(const vector<Plan>& plans, 
+std::tuple<int, int, int> MultiAgentPlanner::evaluate_plans(const vector<Plan>& plans, 
 																												const Scenario& scenario, bool print) {
 	vector<int> costs(plans.size());
 	int total_cost = 0;
+	int total_conflicts = 0;
+	int total_synergies = 0;
 
 	stringstream ss;
 	ss << "**********Evaluating plans**********" << endl;
@@ -242,10 +252,14 @@ pair<vector<int>, int> MultiAgentPlanner::evaluate_plans(const vector<Plan>& pla
 		int plan_cost = 0;
 
 		for (const auto& act : plans[id].actions) {
-			int cost = calc.getInterDependentCost(act.edge, act.start_time, act.action_cost);
-			plan_cost += cost;
+			int cost, conflicts, synergies;
 
-			ss << "  " << act.edge << ": " << cost << endl;
+			std::tie(cost, conflicts, synergies) = calc.getCostWithInteractions(act.edge, act.start_time, act.action_cost);
+			plan_cost += cost;
+			total_conflicts += conflicts;
+			total_synergies += synergies;
+
+			ss << "  " << act.edge << ": " << cost << " [" << conflicts << "," << synergies << "]" << endl;
 		}
 
 		costs[id] = plan_cost;
@@ -259,7 +273,7 @@ pair<vector<int>, int> MultiAgentPlanner::evaluate_plans(const vector<Plan>& pla
 	if (print)
 		cout << ss.str() << endl;
 
-	return make_pair(costs, total_cost);
+	return make_tuple(total_cost, total_conflicts, total_synergies);
 }
 
 int MultiAgentPlanner::evaluate_one_plan(const std::vector<Plan>& plans, 
@@ -284,7 +298,7 @@ vector<vector<int> > MultiAgentPlanner::get_interacting_groups(const vector<Plan
   InteractionGraph agent_graph(plans.size());
 
 	for (int id = 0; id < plans.size(); ++id) {
-		cout << " -Agent " << id << "- " << endl;
+		//cout << " -Agent " << id << "- " << endl;
 
 		InteractionCostCalculator calc(scenario, plans, id);
 
@@ -301,9 +315,9 @@ vector<vector<int> > MultiAgentPlanner::get_interacting_groups(const vector<Plan
   int num = connected_components(agent_graph, &component[0]);
 
   vector<vector<int> > groups(num);
-  cout << "Total number of groups: " << num << endl;
+  //cout << "Total number of groups: " << num << endl;
   for (int i = 0; i != component.size(); ++i) {
-    cout << "Agent " << i <<" is in group " << component[i] << endl;
+    //cout << "Agent " << i <<" is in group " << component[i] << endl;
     groups[component[i]].push_back(i);
   }
   cout << endl;

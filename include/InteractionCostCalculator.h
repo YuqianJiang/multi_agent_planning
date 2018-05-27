@@ -21,6 +21,8 @@ public:
 
 	float getInterDependentCost(Edge edge, int time, int cost) const;
 
+	std::tuple<int, int, int> getCostWithInteractions(Edge edge, int time, int cost) const;
+
 	std::vector<int> getInteractingAgents(Edge, int time) const;
 
 private:

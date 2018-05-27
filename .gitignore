@@ -1,5 +1,9 @@
 # exclude everything
 graphs/*
 
+build/*
+
+results/*
+
 # exception to the rule
 !graphs/.gitkeep 

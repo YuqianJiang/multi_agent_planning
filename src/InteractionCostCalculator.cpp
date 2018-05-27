@@ -56,6 +56,38 @@ float InteractionCostCalculator::getInterDependentCost(Edge edge, int time, int 
 	return inter_dependent_cost;
 }
 
+std::tuple<int, int, int> InteractionCostCalculator::getCostWithInteractions(Edge edge, int time, int cost) const {
+
+	int inter_dependent_cost = cost;
+	int num_conflicts = 0;
+	int num_synergies = 0;
+
+	try {
+		const PlannedActionList& interactions = interactionMap.at(edge);
+
+		for (auto const& i : interactions) {
+			if (get<1>(i).start_time == time) {
+
+				if (get<2>(i) > 0) {
+					num_conflicts++;
+				}
+				else if (inter_dependent_cost > 0) {
+					num_synergies++;
+				}
+
+				inter_dependent_cost += get<2>(i) * alpha;
+			}
+		}
+	}
+	catch (std::out_of_range) {}
+
+	if (inter_dependent_cost < 0) {
+		inter_dependent_cost = 0;
+	}
+
+	return make_tuple(inter_dependent_cost, num_conflicts, num_synergies);
+}
+
 vector<int> InteractionCostCalculator::getInteractingAgents(Edge edge, int time) const {
 	vector<int> agents;
 
@@ -64,7 +96,7 @@ vector<int> InteractionCostCalculator::getInteractingAgents(Edge edge, int time)
 
 		for (auto const& i : interactions) {
 			if (get<1>(i).start_time == time) {
-				cout << get<0>(i) << " " << get<1>(i).edge << endl;
+				//cout << get<0>(i) << " " << get<1>(i).edge << endl;
 				agents.push_back(get<0>(i));
 			}
 		}
